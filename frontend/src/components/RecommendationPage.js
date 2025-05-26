@@ -152,6 +152,15 @@ function RecommendationPage() {
               )}
               <h3>{inputSongDetails["Track Name"]}</h3>
               <p>{inputSongDetails["Artist Name(s)"]}</p>
+              <iframe 
+                src={`https://open.spotify.com/embed/track/${inputSongDetails["Track URI"].split(':').pop()}`}
+                width="300" 
+                height="352"
+                frameBorder="0" 
+                allowtransparency="true" 
+                allow="encrypted-media"
+                title="Spotify Embed Player"
+              ></iframe>
               <a 
                 href={`https://open.spotify.com/track/${inputSongDetails["Track URI"].split(':').pop()}`}
                 target="_blank"
@@ -182,6 +191,15 @@ function RecommendationPage() {
                   )}
                   <h3>{rec["Track Name"]}</h3>
                   <p>{rec["Artist Name(s)"]}</p>
+                  <iframe 
+                    src={`https://open.spotify.com/embed/track/${rec["Track URI"].split(':').pop()}`}
+                    width="300" 
+                    height="80" 
+                    frameBorder="0" 
+                    allowtransparency="true" 
+                    allow="encrypted-media"
+                    title="Spotify Embed Player"
+                  ></iframe>
                   <a 
                     href={`https://open.spotify.com/track/${rec["Track URI"].split(':').pop()}`}
                     target="_blank"

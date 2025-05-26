@@ -96,4 +96,66 @@
 .get-started-button:hover {
   background-color: #1ed760;
   transform: translateY(-2px);
+}
+
+/* Info Carousel Styles */
+.info-carousel {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  justify-content: center; /* Center cards if they don't fill the carousel width */
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 40px; /* Match original section margin */
+  padding-bottom: 20px; /* Space for scrollbar */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding-left: 20px;  /* Match .recommendations padding */
+  padding-right: 20px; /* Match .recommendations padding */
+}
+
+/* Resetting some section properties for cards within the carousel */
+.info-carousel > .info-card {
+  margin-bottom: 0; /* Remove original bottom margin as gap handles spacing */
+}
+
+.info-card {
+  background-color: #3b3f46; /* From original .landing-page section */
+  padding: 20px; /* From original .landing-page section */
+  border-radius: 8px; /* From original .landing-page section */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* From original .landing-page section */
+  flex-shrink: 0;
+  min-height: 400px; /* Adjust as needed for consistent card height */
+  display: flex; /* Added to help with vertical alignment if needed */
+  flex-direction: column; /* Added to help with vertical alignment if needed */
+  width: 500px; /* Uniform width for all info cards */
+}
+
+.info-card.project-overview,
+.info-card.how-it-works {
+  /* width: 450px; */ /* Removed individual width */
+}
+
+.info-card.system-architecture {
+  /* width: auto; */ /* Removed individual width */
+  /* min-width: 500px; */ /* Removed individual min-width */
+}
+
+/* Ensure h2 styles from .landing-page section are applied if not inheriting */
+.info-card h2 {
+  color: #1DB954;
+  border-bottom: 2px solid #1DB954;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.info-card.selected {
+  transform: scale(1.05); /* Slightly enlarge the selected card */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Enhance shadow for a "pop" effect */
+  border: 2px solid #1DB954; /* Add a border to highlight */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
 } 
