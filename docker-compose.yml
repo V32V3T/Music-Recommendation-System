@@ -7,6 +7,10 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
 
   frontend:
     build: ./frontend
@@ -16,3 +20,17 @@ services:
       - ./frontend/src:/app/src
     depends_on:
       - backend 
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydatabase
+
+volumes:
+  postgres_data: 

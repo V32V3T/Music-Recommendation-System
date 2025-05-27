@@ -1,10 +1,24 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import cosine_similarity
 import os
+from datetime import timedelta
+
+# Import new modules using absolute imports
+import models
+import schemas
+import auth
+import database
+# engine and get_db will be accessed via the database module, e.g., database.engine
+
+# Create database tables if they don't exist (for development only)
+# For production, use Alembic for migrations
+models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
 
@@ -75,12 +89,46 @@ async def startup_event():
 
 
 # --- API Endpoints ---
+
+# Authentication Endpoints (prefix with /api for clarity)
+@app.post("/api/signup", response_model=schemas.UserOut)
+async def signup_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
+    db_user = auth.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed_password = auth.get_password_hash(user.password)
+    db_user = models.User(email=user.email, hashed_password=hashed_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.post("/api/login", response_model=schemas.Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
+    user = auth.get_user_by_email(db, email=form_data.username) # OAuth2 form uses 'username' for email
+    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/api/users/me", response_model=schemas.UserOut)
+async def read_users_me(current_user: models.User = Depends(auth.get_current_active_user)):
+    return current_user
+
+# Protected Recommendation Endpoints
 @app.get("/")
 async def root():
     return {"message": "Spotify Recommendation API is running!"}
 
 @app.get("/recommendations/{track_name}")
-async def get_recommendations_endpoint(track_name: str, top_n: int = 5):
+async def get_recommendations_endpoint(track_name: str, top_n: int = 5, current_user: models.User = Depends(auth.get_current_active_user)):
     global df_clean, scaler
 
     if df_clean.empty:
@@ -131,7 +179,7 @@ async def get_recommendations_endpoint(track_name: str, top_n: int = 5):
     }
 
 @app.get("/search_suggestions/{query}")
-async def get_search_suggestions(query: str, limit: int = 10):
+async def get_search_suggestions(query: str, limit: int = 10, current_user: models.User = Depends(auth.get_current_active_user)):
     global df_clean
     if df_clean.empty:
         return {"error": "Dataset not loaded or is empty."}

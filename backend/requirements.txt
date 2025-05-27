@@ -1,4 +1,11 @@
 fastapi
 uvicorn[standard]
 pandas
-scikit-learn 
+scikit-learn
+psycopg2-binary # For PostgreSQL connection
+SQLAlchemy # ORM for database interaction
+passlib[bcrypt] # For password hashing
+python-jose[cryptography] # For JWT generation and validation
+alembic # For database migrations
+email-validator # For Pydantic EmailStr validation
+python-multipart # For FastAPI form data (OAuth2PasswordRequestForm) 

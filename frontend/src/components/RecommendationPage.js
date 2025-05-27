@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import '../App.css'; // We can still use some global styles
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -11,7 +12,7 @@ function RecommendationPage() {
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedSong, setSelectedSong] = useState(null);
+  const { token } = useContext(AuthContext);
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -23,7 +24,28 @@ function RecommendationPage() {
     };
   };
 
-  const fetchSuggestions = async (query) => {
+  const fetchApi = useCallback(async (url, options = {}) => {
+    if (!token) {
+      setError("Authentication token not found. Please login again.");
+      return null;
+    }
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      if (response.status === 401) {
+        setError("Session expired or invalid. Please login again.");
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  }, [token]);
+
+  const fetchSuggestions = useCallback(async (query) => {
     if (query.length < 2) {
       setSuggestions([]);
       return;
@@ -31,28 +53,27 @@ function RecommendationPage() {
     setIsLoadingSuggestions(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/search_suggestions/${encodeURIComponent(query)}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-        setSuggestions([]);
-      } else {
-        setSuggestions(data || []);
+      const data = await fetchApi(`${API_BASE_URL}/search_suggestions/${encodeURIComponent(query)}`);
+      if (data) {
+        if (data.error) {
+          setError(data.error);
+          setSuggestions([]);
+        } else {
+          setSuggestions(data || []);
+        }
       }
     } catch (e) {
       console.error("Failed to fetch suggestions:", e);
-      setError("Failed to load suggestions. Backend might be down or unreachable.");
+      if (!error) {
+        setError("Failed to load suggestions. Backend might be down or unreachable.");
+      }
       setSuggestions([]);
     } finally {
       setIsLoadingSuggestions(false);
     }
-  };
+  }, [fetchApi, error]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 300), []);
+  const debouncedFetchSuggestions = useCallback(debounce(fetchSuggestions, 300), [fetchSuggestions]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -62,37 +83,36 @@ function RecommendationPage() {
     }
   }, [searchTerm, debouncedFetchSuggestions]);
 
-  const fetchRecommendations = async (trackName) => {
+  const fetchRecommendations = useCallback(async (trackName) => {
     setIsLoadingRecommendations(true);
     setError(null);
     setRecommendations([]);
     setInputSongDetails(null);
-    setSelectedSong(trackName);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/recommendations/${encodeURIComponent(trackName)}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setInputSongDetails(data.input_song || null);
-        setRecommendations(data.recommendations || []);
-        if (data.input_song && (!data.recommendations || data.recommendations.length === 0)) {
+      const data = await fetchApi(`${API_BASE_URL}/recommendations/${encodeURIComponent(trackName)}`);
+      if (data) {
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setInputSongDetails(data.input_song || null);
+          setRecommendations(data.recommendations || []);
+          if (data.input_song && (!data.recommendations || data.recommendations.length === 0)) {
             
-        } else if (!data.input_song && !data.recommendations) {
+          } else if (!data.input_song && !data.recommendations) {
             setError("Received unexpected data structure from backend.");
+          }
         }
       }
     } catch (e) {
       console.error("Failed to fetch recommendations:", e);
-      setError("Failed to load recommendations. Backend might be down or unreachable.");
+      if (!error) {
+        setError("Failed to load recommendations. Backend might be down or unreachable.");
+      }
     } finally {
       setIsLoadingRecommendations(false);
     }
-  };
+  }, [fetchApi, error]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
