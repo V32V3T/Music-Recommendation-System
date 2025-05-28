@@ -175,7 +175,7 @@ function RecommendationPage() {
               <iframe 
                 src={`https://open.spotify.com/embed/track/${inputSongDetails["Track URI"].split(':').pop()}`}
                 width="300" 
-                height="352"
+                height="80"
                 frameBorder="0" 
                 allowtransparency="true" 
                 allow="encrypted-media"
@@ -214,7 +214,7 @@ function RecommendationPage() {
                   <iframe 
                     src={`https://open.spotify.com/embed/track/${rec["Track URI"].split(':').pop()}`}
                     width="300" 
-                    height="80" 
+                    height="80"
                     frameBorder="0" 
                     allowtransparency="true" 
                     allow="encrypted-media"

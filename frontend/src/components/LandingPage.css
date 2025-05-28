@@ -7,20 +7,20 @@
 
 .landing-header {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 30px 20px;
+  margin-bottom: 30px;
+  padding: 20px 20px;
   background-color: rgba(29, 185, 84, 0.1); /* Subtle Spotify green background */
   border-radius: 8px;
 }
 
 .landing-header h1 {
   color: #1DB954; /* Spotify Green */
-  font-size: 2.8em;
-  margin-bottom: 10px;
+  font-size: 2.5em;
+  margin-bottom: 8px;
 }
 
 .subtitle {
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: #b3b3b3;
 }
 
@@ -101,61 +101,198 @@
 /* Info Carousel Styles */
 .info-carousel {
   display: flex;
-  overflow-x: auto;
-  flex-wrap: nowrap;
-  justify-content: center; /* Center cards if they don't fill the carousel width */
-  gap: 20px;
+  flex-wrap: nowrap; /* Ensure cards stay in a single row */
+  overflow-x: auto; /* Allow horizontal scrolling if cards overflow */
+  justify-content: center; /* Center the group of cards if they don't fill the width */
+  gap: 20px; /* Increased gap slightly for better separation */
   margin-top: 20px;
-  margin-bottom: 40px; /* Match original section margin */
-  padding-bottom: 20px; /* Space for scrollbar */
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  box-sizing: border-box;
-  padding-left: 20px;  /* Match .recommendations padding */
-  padding-right: 20px; /* Match .recommendations padding */
+  margin-bottom: 40px; 
+  padding: 10px 0; /* Add some vertical padding, remove horizontal as scroll handles it */
+  /* Clear previous full-width styling for the carousel, let landing-page handle max-width */
 }
 
 /* Resetting some section properties for cards within the carousel */
 .info-carousel > .info-card {
-  margin-bottom: 0; /* Remove original bottom margin as gap handles spacing */
+  margin-bottom: 0; 
 }
 
 .info-card {
-  background-color: #3b3f46; /* From original .landing-page section */
-  padding: 20px; /* From original .landing-page section */
-  border-radius: 8px; /* From original .landing-page section */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* From original .landing-page section */
-  flex-shrink: 0;
-  min-height: 400px; /* Adjust as needed for consistent card height */
-  display: flex; /* Added to help with vertical alignment if needed */
-  flex-direction: column; /* Added to help with vertical alignment if needed */
-  width: 500px; /* Uniform width for all info cards */
+  background-color: #3b3f46; 
+  padding: 15px; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25); 
+  flex-shrink: 0; /* Prevent cards from shrinking */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; /* Center content (icon and title) horizontally */
+  justify-content: center; /* Center content (icon and title) vertically */
+  width: 180px; /* Adjusted width for icon + title */
+  min-height: 150px; /* Adjusted min-height for icon + title */
+  text-align: center; /* Center text within the card */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  position: relative; 
 }
 
-.info-card.project-overview,
-.info-card.how-it-works {
-  /* width: 450px; */ /* Removed individual width */
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  background-color: #4a4f56;
 }
 
-.info-card.system-architecture {
-  /* width: auto; */ /* Removed individual width */
-  /* min-width: 500px; */ /* Removed individual min-width */
+/* Styles for the icon in the default card state */
+.info-card-icon {
+  font-size: 2.5em; /* Adjust icon size as needed */
+  margin-bottom: 10px;
+  color: #1DB954; /* Spotify green or a contrasting color */
 }
 
-/* Ensure h2 styles from .landing-page section are applied if not inheriting */
+/* Hide detailed content in default card state */
+.info-card .card-content-wrapper {
+  display: none; 
+}
+
 .info-card h2 {
-  color: #1DB954;
-  border-bottom: 2px solid #1DB954;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  font-size: 1.8em;
+  padding-bottom: 0; /* Remove padding */
+  margin-bottom: 0; /* Remove margin */
+  font-size: 1.1em; /* Adjusted for default card */
+  border-bottom: none; /* Remove border in default state */
+  line-height: 1.2;
 }
 
-.info-card.selected {
-  transform: scale(1.05); /* Slightly enlarge the selected card */
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Enhance shadow for a "pop" effect */
-  border: 2px solid #1DB954; /* Add a border to highlight */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+.info-card.selected { /* This class is no longer used by JS, can be removed or repurposed */
+  /* transform: scale(1.05); */
+  /* box-shadow: 0 8px 16px rgba(0,0,0,0.3); */ 
+  /* border: 2px solid #1DB954; */
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+} 
+
+/* Styles for the backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999; /* Below zoomed card, above everything else */
+}
+
+/* Styles for the zoomed card */
+.info-card.zoomed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1); /* Initial state for animation */
+  width: 75vw; /* Large width */
+  max-width: 800px; /* Max width for very large screens */
+  height: auto; /* Auto height based on content */
+  min-height: auto; /* Reset min-height */
+  max-height: 85vh; /* Max height to prevent overflow */
+  padding: 25px; /* More padding when zoomed */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  z-index: 1000; /* Above backdrop */
+  cursor: default; /* No pointer cursor when zoomed */
+  overflow-y: auto; /* Allow scrolling for content longer than max-height */
+  animation: zoomIn 0.3s ease-out forwards;
+  text-align: left; /* Reset text-align for zoomed card content */
+  align-items: stretch; /* Reset alignment for zoomed card */
+  justify-content: flex-start; /* Reset justification for zoomed card */
+}
+
+@keyframes zoomIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.info-card.zoomed h2 {
+  font-size: 2em; /* Larger title when zoomed */
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1DB954; /* Restore border for zoomed state */
+  text-align: left;
+}
+
+.info-card.zoomed .card-content-wrapper {
+  display: block; /* Show content when zoomed */
+  font-size: 1em; /* Normal font size when zoomed */
+  max-height: none; /* Allow full content height */
+  overflow-y: visible; /* Let parent handle scroll */
+}
+
+.info-card.zoomed .responsive-image {
+  max-width: 80%; /* Adjust image size in zoomed view */
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Close button for the zoomed card */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #555;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  line-height: 28px; /* Center X */
+  text-align: center;
+  cursor: pointer;
+  z-index: 1001; /* Above card content */
+  transition: background-color 0.2s ease;
+}
+
+.close-button:hover {
+  background: #e63946; /* A reddish color for hover */
+}
+
+.landing-page.zoomed-active {
+  overflow: hidden; /* Prevent body scroll when a card is zoomed */
+}
+
+/* Ensure icon is hidden when card is zoomed */
+.info-card.zoomed .info-card-icon {
+  display: none;
+}
+
+/* Adjustments for smaller screens if needed */
+@media (max-width: 768px) {
+  .info-carousel {
+    gap: 15px; 
+  }
+  .info-card {
+    width: 140px; 
+    min-height: 120px;
+  }
+  .info-card-icon {
+    font-size: 2em;
+  }
+  .info-card h2 {
+    font-size: 1em; 
+  }
+  .info-card .card-content-wrapper {
+    font-size: 0.85em; /* Adjusted */
+    max-height: 80px; /* Adjusted */
+  }
+  .info-card.zoomed {
+    width: 90vw;
+    max-height: 90vh;
+  }
+  .info-card.zoomed h2 {
+    font-size: 1.5em;
+  }
+  .info-card.zoomed .card-content-wrapper {
+    font-size: 0.9em;
+  }
 } 

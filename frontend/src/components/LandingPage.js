@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css'; // We'll create this CSS file next
 
@@ -7,70 +7,36 @@ const flowchartImageUrl = 'https://via.placeholder.com/600x300.png?text=Project+
 const architectureImageUrl = 'https://via.placeholder.com/600x300.png?text=System+Architecture';
 
 function LandingPage() {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const carouselRef = useRef(null);
-  const projectOverviewRef = useRef(null);
-  const howItWorksRef = useRef(null);
-  const systemArchitectureRef = useRef(null);
-
-  const cardRefs = {
-    'project-overview': projectOverviewRef,
-    'how-it-works': howItWorksRef,
-    'system-architecture': systemArchitectureRef,
-  };
+  const [zoomedCardId, setZoomedCardId] = useState(null);
 
   const handleCardClick = (cardId) => {
-    setSelectedCard(cardId);
+    setZoomedCardId(cardId);
   };
 
-  useEffect(() => {
-    if (selectedCard && carouselRef.current && cardRefs[selectedCard]?.current) {
-      const cardElement = cardRefs[selectedCard].current;
-      const carouselElement = carouselRef.current;
+  const handleCloseZoom = () => {
+    setZoomedCardId(null);
+  };
 
-      // Calculate the position to scroll to
-      const cardLeft = cardElement.offsetLeft;
-      const cardWidth = cardElement.offsetWidth;
-      const carouselWidth = carouselElement.offsetWidth;
-
-      // Scroll to center the card
-      const scrollPosition = cardLeft - (carouselWidth / 2) + (cardWidth / 2);
-      
-      carouselElement.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth',
-      });
-    }
-  }, [selectedCard, cardRefs]);
-
-  return (
-    <div className="landing-page">
-      <header className="landing-header">
-        <h1>Welcome to the Spotify Recommendation Engine</h1>
-        <p className="subtitle">Discover new music tailored to your taste!</p>
-      </header>
-
-      <div className="info-carousel" ref={carouselRef}>
-        <section 
-          ref={projectOverviewRef}
-          className={`project-overview info-card ${selectedCard === 'project-overview' ? 'selected' : ''}`}
-          onClick={() => handleCardClick('project-overview')}
-        >
-          <h2>Project Overview</h2>
-          <p>
-            This application provides personalized song recommendations based on audio features of tracks
-            you like. It leverages a dataset of thousands of songs, applies machine learning techniques
-            (KMeans clustering) to group similar songs, and uses cosine similarity to find the best matches
-            within those groups.
-          </p>
-        </section>
-
-        <section 
-          ref={howItWorksRef}
-          className={`how-it-works info-card ${selectedCard === 'how-it-works' ? 'selected' : ''}`}
-          onClick={() => handleCardClick('how-it-works')}
-        >
-          <h2>How It Works</h2>
+  const cardData = [
+    {
+      id: 'project-overview',
+      title: 'Project Overview',
+      icon: '💡', // Placeholder icon
+      content: (
+        <p>
+          This application provides personalized song recommendations based on audio features of tracks
+          you like. It leverages a dataset of thousands of songs, applies machine learning techniques
+          (KMeans clustering) to group similar songs, and uses cosine similarity to find the best matches
+          within those groups.
+        </p>
+      )
+    },
+    {
+      id: 'how-it-works',
+      title: 'How It Works',
+      icon: '⚙️', // Placeholder icon
+      content: (
+        <>
           <div className="flowchart-container">
             <img src={flowchartImageUrl} alt="Project Flowchart" className="responsive-image"/>
             <p className="caption">Fig 1: High-level project flowchart.</p>
@@ -83,14 +49,15 @@ function LandingPage() {
             <li><strong>Similarity Calculation:</strong> Cosine similarity ranks songs within the cluster.</li>
             <li><strong>Recommendation Output:</strong> Top N most similar songs are presented to you.</li>
           </ol>
-        </section>
-
-        <section 
-          ref={systemArchitectureRef}
-          className={`system-architecture info-card ${selectedCard === 'system-architecture' ? 'selected' : ''}`}
-          onClick={() => handleCardClick('system-architecture')}
-        >
-          <h2>System Architecture</h2>
+        </>
+      )
+    },
+    {
+      id: 'system-architecture',
+      title: 'System Architecture',
+      icon: '📊', // Placeholder icon
+      content: (
+        <>
           <div className="architecture-container">
             <img src={architectureImageUrl} alt="System Architecture" className="responsive-image"/>
             <p className="caption">Fig 2: Overview of the frontend, backend, and database interaction.</p>
@@ -101,7 +68,39 @@ function LandingPage() {
             <li><strong>Database:</strong> A CSV file containing track data and audio features.</li>
             <li><strong>Containerization:</strong> Both frontend and backend are containerized using Docker for easy deployment and scalability.</li>
           </ul>
-        </section>
+        </>
+      )
+    }
+  ];
+
+  return (
+    <div className={`landing-page ${zoomedCardId ? 'zoomed-active' : ''}`}>
+      {zoomedCardId && <div className="backdrop" onClick={handleCloseZoom}></div>}
+      
+      <header className="landing-header">
+        <h1>Welcome to the Spotify Recommendation Engine</h1>
+        <p className="subtitle">Discover new music tailored to your taste!</p>
+      </header>
+
+      <div className="info-carousel">
+        {cardData.map(card => (
+          <section 
+            key={card.id}
+            className={`info-card ${card.id} ${zoomedCardId === card.id ? 'zoomed' : ''}`}
+            onClick={() => !zoomedCardId && handleCardClick(card.id)}
+          >
+            {zoomedCardId === card.id && (
+              <button className="close-button" onClick={(e) => { e.stopPropagation(); handleCloseZoom();}}>X</button>
+            )}
+            {/* Display icon only when not zoomed */}
+            {!zoomedCardId && card.icon && <div className="info-card-icon">{card.icon}</div>}
+            <h2>{card.title}</h2>
+            {/* Content wrapper is always rendered but hidden by CSS in default state */}
+            <div className="card-content-wrapper">
+              {card.content}
+            </div>
+          </section>
+        ))}
       </div>
       
       <section className="get-started-section">
