@@ -10,8 +10,39 @@ The Spotify Recommendation Engine is a full-stack web application designed to pr
 *   **Song Search with Suggestions:** Autocomplete-style search suggestions as you type a song name.
 *   **Embedded Song Previews:** Listen to a preview of recommended songs directly on the page via an embedded Spotify player.
 *   **User Authentication:** Secure sign-up and login functionality for users.
+*   **Dynamic Landing Page:** Features an engaging hero section with animated typing text, a pulsing neon title box, and dynamic synthwave line animations.
+*   **Themed Interface:** Consistent dark theme with neon green accents across the application, including interactive carousels, navigation elements, and modals.
+*   **Interactive Carousels:** Information sections on the landing page and recommendation cards are displayed in interactive rotational carousels.
+*   **Global Animated Background:** A subtle, dynamic background with floating musical notes and shapes enhances the visual experience across all pages.
 *   **Responsive Design:** User interface adapts to different screen sizes.
-*   **Interactive Carousels:** Information sections on the landing page and recommendation cards are displayed in horizontally scrollable carousels.
+
+### 2.1. Key UI/UX Enhancements
+
+The application boasts several dynamic and visually engaging UI elements to enhance user experience:
+
+*   **Landing Page - Hero Section:**
+    *   **Animated Title:** The main "TuneFinder" title is housed in an opaque dark box with a pulsing neon green border and shadow.
+    *   **Synthwave Animation:** Neon green, wavy lines animate subtly behind the title box, adding a retro-futuristic vibe.
+    *   **Typing Sub-header:** A sub-header cycles through engaging phrases with a typing animation.
+*   **Landing Page - Information Cards:**
+    *   Presented as a rotational carousel.
+    *   Themed with dark, semi-transparent backgrounds, neon green borders, and titles, allowing the global animated background to show through.
+    *   Clicking a centered card opens a detailed modal view.
+*   **Recommendation Page - Header:**
+    *   The static page title has been replaced with an animated typing text, cycling through relevant phrases.
+    *   Header height is optimized for a compact and modern look.
+*   **Recommendation Page - Song Cards:**
+    *   Presented in a rotational carousel.
+    *   Feature a "vinyl record" style with album art on a spinning disc.
+    *   Include an embedded Spotify player for song previews.
+*   **Navigation Bar:**
+    *   Sticky at the top of the page for easy access.
+    *   Styled with a dark, semi-transparent background and a neon green bottom border.
+    *   Navigation links ("Home", "Login", "Sign Up") and the "Logout" button are designed as sleek, modern buttons with neon green hover/focus effects.
+*   **Global Animated Background:**
+    *   A persistent, full-page animated background with an increased density of floating musical notes and abstract shapes, all subtly themed in neon green, provides a cohesive and immersive visual environment.
+*   **Visualizer Elements:**
+    *   A small audio visualizer animation is present in the "Get Started" section of the landing page.
 
 ## 3. Tech Stack
 

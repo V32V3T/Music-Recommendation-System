@@ -58,15 +58,12 @@ function HeroSection() {
 
   return (
     <div className="hero-section">
-      {/* <div className="animated-background">
-        {Array.from({ length: 15 }).map((_, i) => (
-          <div key={i} className={`shape shape-${i % 5}`}></div>
-        ))}
-         {['♪', '♫', '♭', '♯', '♩'].map((note, i) => (
-          <div key={`note-${i}`} className={`musical-note note-${i}`}>{note}</div>
-        ))}
-      </div> */}
       {/* Animated background is now global */}
+      <div className="synthwave-lines-container">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={`synth-line-${i}`} className="synthwave-line" style={{ animationDelay: `${i * 0.1}s` }}></div>
+        ))}
+      </div>
       <div className="hero-content">
         <h1 className="neon-text-main">TuneFinder</h1> 
         <p className="typed-text">{typedText}<span className="cursor">|</span></p>

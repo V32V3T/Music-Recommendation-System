@@ -506,14 +506,51 @@
   z-index: 1; /* Ensure hero content is above global background but below modals etc. */
 }
 
+/* Synthwave Lines Animation Styles */
+.synthwave-lines-container {
+  position: absolute;
+  top: 0; /* Align with hero section top */
+  left: 0;
+  width: 100%;
+  height: 100%; /* Cover hero section */
+  display: flex;
+  justify-content: space-around; /* Distribute lines across width */
+  align-items: center; /* Vertically center the wave origin */
+  z-index: 1; /* Behind hero-content (which is z-index: 2) */
+  overflow: hidden; /* Clip lines if they go out of bounds */
+  filter: blur(1px); /* Optional: adds to the retro feel */
+}
+
+.synthwave-line {
+  width: 2px; /* Thickness of the lines */
+  height: 80%; /* Max height of the wave, relative to container */
+  background-color: #1DB954; /* Neon green */
+  box-shadow: 0 0 5px #1DB954, 0 0 10px #1DB954; /* Glow effect */
+  animation-name: waveAnimation;
+  animation-duration: 3s; /* Speed of the wave */
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  /* animation-delay is set inline in JS */
+}
+
+@keyframes waveAnimation {
+  0%, 100% {
+    transform: scaleY(0.1) translateY(0px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1) translateY(-20px); /* Wave peak, moves up slightly */
+    opacity: 1;
+  }
+}
+
 .hero-content {
   position: relative;
-  z-index: 2; /* Above hero-section if it had its own bg, now just above shapes if any were local */
+  z-index: 2; /* Ensure it's above the new synthwave lines */
   padding: 30px 40px; /* Increased padding for a slightly larger box */
-  /* background-color: rgba(0,0,0,0.4); Remove background color */
-  background-color: transparent;
+  background-color: #0A0A0A; /* Opaque very dark background */
   border-radius: 15px; /* Slightly larger radius */
-  animation: pulseNeonBox 2s infinite ease-in-out; /* Apply the new animation */
+  animation: pulseNeonBox 2s infinite ease-in-out; /* Apply the existing animation */
   /* Initial neon box shadow state (part of the animation's 0% or base state) */
   box-shadow:
     0 0 5px #1DB954,
@@ -522,7 +559,7 @@
     0 0 20px #1aa34a,
     0 0 30px #1aa34a;
   /* Add a subtle border to define the box even when glow is minimal */
-  border: 1px solid rgba(29, 185, 84, 0.3); 
+  border: 1px solid rgba(29, 185, 84, 0.3);
 }
 
 /* Keyframes for the pulsing neon box effect */
