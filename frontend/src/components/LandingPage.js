@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import './LandingPage.css'; // We'll create this CSS file next
 
 // Placeholder URLs for images - replace with your actual image paths or URLs
-const flowchartImageUrl = 'https://via.placeholder.com/600x300.png?text=Project+Flowchart';
-const architectureImageUrl = 'https://via.placeholder.com/600x300.png?text=System+Architecture';
+// const flowchartImageUrl = 'https://via.placeholder.com/600x300.png?text=Project+Flowchart'; // REMOVED
+// const architectureImageUrl = 'https://via.placeholder.com/600x300.png?text=System+Architecture'; // REMOVED
 
 const heroTexts = [
   "Discover your next favorite song...",
@@ -175,10 +175,10 @@ function LandingPage() {
       icon: '⚙️', // Placeholder icon
       content: (
         <>
-        <div className="flowchart-container">
+        {/* <div className="flowchart-container">
           <img src={flowchartImageUrl} alt="Project Flowchart" className="responsive-image"/>
           <p className="caption">Fig 1: High-level project flowchart.</p>
-        </div>
+        </div> */}
         <ol className="steps-list">
           <li><strong>Data Input:</strong> You enter a song title.</li>
           <li><strong>Song Search:</strong> The system suggests matching songs from our database.</li>
@@ -196,10 +196,10 @@ function LandingPage() {
       icon: '📐', // Changed icon to Triangular Ruler for a blueprint/drafting feel
       content: (
         <>
-        <div className="architecture-container">
+        {/* <div className="architecture-container">
           <img src={architectureImageUrl} alt="System Architecture" className="responsive-image"/>
           <p className="caption">Fig 2: Overview of the frontend, backend, and database interaction.</p>
-        </div>
+        </div> */}
         <ul>
           <li><strong>Frontend:</strong> Built with React, providing a user-friendly interface.</li>
           <li><strong>Backend API:</strong> Developed with Python (FastAPI), handling the logic and data processing.</li>
