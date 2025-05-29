@@ -175,11 +175,11 @@ This diagram shows the main components and their interactions.
 
 ```mermaid
 graph TD
-    User[<img src=\'https://img.icons8.com/ios-glyphs/30/000000/user-male-circle.png\' width=\'20\' /> User] -- Interacts via Browser --> FE[<img src=\'https://img.icons8.com/color/48/000000/react-native.png\' width=\'20\' /> Frontend (React on Nginx)];
-    FE -- API Requests (HTTP/S) --> BE[<img src=\'https://img.icons8.com/color/48/000000/python.png\' width=\'20\' /> Backend (FastAPI)];
-    BE -- CRUD Operations (Auth) --> DB[<img src=\'https://img.icons8.com/color/48/000000/postgreesql.png\' width=\'20\' /> PostgreSQL Database];
-    BE -- Reads Song Data --> CSV[<img src=\'https://img.icons8.com/officel/16/000000/csv.png\' width=\'20\' /> Song Data CSV];
-    BE -- Uses ML Model --> ML[<img src=\'https://img.icons8.com/fluency/48/000000/artificial-intelligence.png\' width=\'20\' /> ML Model (Clustering/Similarity)];
+    User["<img src='https://img.icons8.com/ios-glyphs/30/000000/user-male-circle.png' width='20' /> User"] -- Interacts via Browser --> FE["<img src='https://img.icons8.com/color/48/000000/react-native.png' width='20' /> Frontend (React on Nginx)"];
+    FE -- API Requests (HTTP/S) --> BE["<img src='https://img.icons8.com/color/48/000000/python.png' width='20' /> Backend (FastAPI)"];
+    BE -- CRUD Operations (Auth) --> DB["<img src='https://img.icons8.com/color/48/000000/postgreesql.png' width='20' /> PostgreSQL Database"];
+    BE -- Reads Song Data --> CSV["<img src='https://img.icons8.com/officel/16/000000/csv.png' width='20' /> Song Data CSV"];
+    BE -- Uses ML Model --> ML["<img src='https://img.icons8.com/fluency/48/000000/artificial-intelligence.png' width='20' /> ML Model (Clustering/Similarity)"];
 
     subgraph Docker Environment
         FE
