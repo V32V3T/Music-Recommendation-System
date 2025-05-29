@@ -1,11 +1,9 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #282c34;
-  color: white;
+  background-color: #000000;
+  color: #f0f0f0;
   margin: 0;
   padding: 0;
 }
@@ -13,6 +11,9 @@ body {
 .App {
   text-align: center;
   padding-bottom: 60px; /* Reduced padding to make space for slimmer footer */
+  background-color: transparent; /* Make sure App container is transparent */
+  position: relative; /* Needed for z-indexing contexts within App */
+  z-index: 0; /* Default stacking context */
 }
 
 .App-logo {
@@ -28,14 +29,15 @@ body {
 
 .App-header {
   background-color: #1DB954; /* Spotify Green */
-  padding: 20px;
+  padding: 10px; /* Reduced padding */
   color: white;
   margin-bottom: 30px;
 }
 
 .App-header h1 {
   margin: 0;
-  font-size: 2em;
+  font-size: 1.6em; /* Reduced font size */
+  min-height: 2.0em; /* Adjusted min-height relative to new font-size */
 }
 
 main {
@@ -139,14 +141,20 @@ main {
 
 .recommendations-grid {
   display: flex; 
-  flex-wrap: wrap; /* Allow cards to wrap */
-  /* overflow-x: auto; Removed, no horizontal scroll for the grid */
+  /* flex-wrap: wrap; Removed to allow overflow for carousel items */
+  /* overflow-x: auto; Will be handled by card positioning */
   padding-bottom: 20px; 
-  gap: 20px; /* Can adjust gap as needed */
+  gap: 0px; /* Gap will be controlled by transforms */
   margin-top: 20px;
-  justify-content: center; /* Center cards in the row */
+  /* justify-content: center; Will be handled by transforms */
+  align-items: center; /* Align cards to the center vertically */
+  perspective: 1000px; /* Add perspective for 3D effect */
+  position: relative; /* To position cards absolutely if needed or for stacking context */
+  height: 450px; /* Define a height for the carousel area, adjust as needed */
+  overflow: hidden; /* Hide cards that are too far out */
 }
 
+/* Restored base .recommendation-card styles for general layout and appearance */
 .recommendation-card {
   background-color: #2e3338; 
   padding: 12px; 
@@ -156,11 +164,65 @@ main {
   display: flex;
   flex-direction: column;
   min-height: auto; 
-  /* width: 280px; Removed fixed width */
+  /* Default flex properties for cards that are not in the carousel */
   flex: 1 1 220px; /* Grow, shrink, with a basis of 220px */
   max-width: 260px; /* Max card width */
   min-width: 200px; /* Min card width, adjust as needed for content */
-  flex-shrink: 1; /* Explicitly allow shrinking if needed, though flex: 1 1 basis includes this*/
+  flex-shrink: 1; /* Explicitly allow shrinking if needed */
+  /* Note: .is-vinyl-style or .recommendations-grid .recommendation-card might override width/flex properties */
+}
+
+/* Styles specific to recommendation cards *within* the carousel grid */
+.recommendations-grid .recommendation-card {
+  width: 280px; /* Fixed width for carousel items */
+  flex-shrink: 0; /* Prevent shrinking in the flex container */
+  position: absolute; /* Position cards absolutely within the grid */
+  left: 50%; /* Center cards horizontally */
+  top: 50%; /* Center cards vertically */
+  transform: translate(-50%, -50%); /* Fine-tune centering for carousel items */
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out, z-index 0s 0.25s; /* Smooth transitions */
+  opacity: 1; /* Base opacity for carousel items */
+  cursor: pointer; /* Indicate clickability for carousel items */
+  /* Ensure these override any flex properties from the base .recommendation-card if necessary */
+  flex-grow: 0;
+  flex-basis: auto;
+}
+
+.recommendation-card.card-center {
+  transform: translate(-50%, -50%) scale(1.1);
+  z-index: 3;
+  opacity: 1;
+}
+
+.recommendation-card.card-left1 {
+  transform: translate(-100%, -50%) translateX(-40px) rotateY(30deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.recommendation-card.card-right1 {
+  transform: translate(0%, -50%) translateX(40px) rotateY(-30deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.recommendation-card.card-left2 {
+  transform: translate(-150%, -50%) translateX(-80px) rotateY(45deg) scale(0.8);
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.recommendation-card.card-right2 {
+  transform: translate(50%, -50%) translateX(80px) rotateY(-45deg) scale(0.8);
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.recommendation-card.card-hidden {
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none; /* Make hidden cards unclickable */
 }
 
 .recommendation-card img {
@@ -243,21 +305,54 @@ main {
 
 /* Navigation Link (e.g., Home button on RecommendationPage) */
 .app-nav {
-  text-align: left; /* Align to the left */
-  padding: 10px 20px;
-  background-color: #282c34; /* Match body background or make slightly different */
-  border-bottom: 1px solid #3b3f46;
+  display: flex; /* Use flexbox for alignment */
+  justify-content: space-between; /* Space out home link and auth links/logout button */
+  align-items: center; /* Vertically align items */
+  padding: 10px 25px; /* Adjusted padding */
+  background-color: rgba(20, 20, 20, 0.85); /* Darker semi-transparent background */
+  border-bottom: 1px solid #1DB954; /* Neon green bottom border */
+  position: sticky; /* Make nav sticky */
+  top: 0;
+  z-index: 100; /* Ensure it's above other content */
 }
 
-.nav-link-home {
-  color: #1DB954;
+/* Common style for all nav links and buttons */
+.app-nav a,
+.app-nav button {
+  color: #f0f0f0; /* Light text color */
   text-decoration: none;
-  font-size: 1.1em;
-  font-weight: bold;
+  font-size: 0.95em; /* Slightly adjusted font size */
+  font-weight: 500; /* Medium weight */
+  padding: 8px 15px; /* Uniform padding */
+  border-radius: 20px; /* Rounded corners for button-like appearance */
+  background-color: transparent; /* Transparent background by default */
+  border: 1px solid transparent; /* Transparent border by default */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-left: 10px; /* Spacing between auth links/buttons */
+  cursor: pointer;
 }
 
-.nav-link-home:hover {
-  text-decoration: underline;
+.app-nav a:first-child,
+.app-nav button:first-child {
+  margin-left: 0; /* No margin for the first item in a group if needed (e.g. Home link) */
+}
+
+/* Hover/focus states for all nav links and buttons */
+.app-nav a:hover,
+.app-nav button:hover,
+.app-nav a:focus,
+.app-nav button:focus {
+  background-color: #1DB954; /* Neon green background on hover/focus */
+  color: #ffffff; /* White text on hover/focus */
+  border-color: #1ed760; /* Slightly lighter green border on hover/focus */
+  box-shadow: 0 0 8px rgba(29, 185, 84, 0.5); /* Subtle glow */
+  outline: none; /* Remove default focus outline */
+}
+
+/* Specific class for logout button if it needs to be different, but common style should cover it */
+.nav-link-logout {
+  /* Potentially add specific styles here if needed, e.g., slightly different color for emphasis */
+  /* For now, it will inherit the common .app-nav button styles */
 }
 
 /* Scrollbar for Webkit browsers */
@@ -290,9 +385,11 @@ main {
 .input-song-section {
   margin-bottom: 40px; /* Space between input song and recommendations */
   padding: 20px;
-  background-color: #3b3f46; /* Similar to other sections */
+  background-color: rgba(59, 63, 70, 0.7); /* Semi-transparent version of #3b3f46 */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  position: relative; /* Ensure it sits above global background if not already */
+  z-index: 1; /* Ensure it sits above global background if not already */
 }
 
 .input-song-section h2 {
@@ -328,4 +425,311 @@ main {
   height: 80px;
   border: none;
   margin-bottom: 8px;
+}
+
+/* Recommendation Card General Adjustments for Vinyl Style */
+.recommendation-card.is-vinyl-style {
+  /* background-color: transparent; Already set */
+  /* box-shadow: none; Already set */
+  padding: 15px; 
+  width: 300px; /* Increased from 280px */
+  max-width: 320px; /* Increased max-width, was 300px */
+  min-width: 270px; /* Adjusted min-width, was 250px */
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center; 
+  gap: 15px; 
+}
+
+/* Vinyl Styles */
+.vinyl-container {
+  width: 180px; /* Desired width of the vinyl disc area */
+  height: 180px; /* Desired height, should be same as width for circle */
+  margin-bottom: 10px; /* Space below the vinyl */
+  position: relative; /* For potential pseudo-elements or positioning record sleeve later */
+}
+
+.vinyl-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  background-color: #111; 
+  border: 3px solid #080808; 
+  box-shadow: 0 0 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.3); 
+  position: relative; 
+  transition: transform 0.5s ease-out; /* Keep for potential smooth start/stop if animation is paused/played via JS */
+}
+
+/* NEW: Trigger animation when hovering over the entire card */
+.recommendation-card.is-vinyl-style:hover .vinyl-disc {
+  animation: rotateVinyl 8s linear infinite;
+}
+
+/* Vinyl Hole */
+.vinyl-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25%; /* Size of the center hole relative to disc */
+  height: 25%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0; /* Light color for the label/hole */
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Optional: Subtle Grooves Effect */
+.vinyl-disc::before {
+  content: '';
+  position: absolute;
+  top: 5%; bottom: 5%; left: 5%; right: 5%;
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 0 1px rgba(255,255,255,0.02), 
+    inset 0 0 0 2px rgba(0,0,0,0.1), 
+    inset 0 0 0 4px rgba(0,0,0,0.05), 
+    inset 0 0 0 6px rgba(0,0,0,0.05), 
+    inset 0 0 0 8px rgba(0,0,0,0.05), 
+    inset 0 0 0 10px rgba(0,0,0,0.05);
+  pointer-events: none; /* So it doesn't interfere with hover on disc */
+}
+
+@keyframes rotateVinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Song Details below vinyl */
+.recommendation-card.is-vinyl-style .song-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center text and iframe */
+  width: 100%;
+  padding: 0 10px; /* Padding for details if card padding is removed */
+}
+
+.recommendation-card.is-vinyl-style .song-details h3 {
+  font-size: 1.1em;
+  margin: 5px 0;
+  color: #f0f0f0; /* Ensure good contrast on black background */
+  white-space: normal; /* Allow wrapping for song titles */
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.recommendation-card.is-vinyl-style .song-details p {
+  font-size: 0.9em;
+  margin: 0 0 10px 0;
+  color: #b0b0b0;
+}
+
+.recommendation-card.is-vinyl-style .song-details iframe {
+  width: 100%;
+  max-width: 100%; /* Allow it to fill the padded width of .song-details */
+  height: 88px; /* Match the new height from JS */
+  border: none;
+  border-radius: 6px; 
+  margin-bottom: 10px;
+}
+
+.recommendation-card.is-vinyl-style .spotify-link {
+  /* padding: 6px 10px; */ /* Inherits from global or adjust */
+  font-size: 0.85em;
+}
+
+/* Apply to input-song-card as well if it uses is-vinyl-style */
+.input-song-card.is-vinyl-style {
+  /* Similar adjustments if its structure matches recommendation-card */
+  /* background-color: transparent; */
+  /* box-shadow: none; */
+  align-items: center; 
+  text-align: center;
+  /* It will also need the .vinyl-container and .song-details structure from JS */
+}
+
+/* Ensure the recommendations grid can handle potentially taller cards */
+.recommendations-grid {
+  align-items: flex-start; /* Align cards to the top if they have varying heights */
+  /* gap: 20px; */ /* Already there */
+}
+
+/* Global Animated Background Styles */
+.global-animated-background {
+  position: fixed; /* Fixed to cover viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Behind all other content */
+  overflow: hidden; /* Prevent scrollbars if shapes go to edges */
+  background: linear-gradient(135deg, #0a0a0a 0%, #121212 70%, #1f1f1f 100%); /* Default dark gradient for all pages */
+}
+
+.global-animated-background .shape, 
+.global-animated-background .musical-note {
+  position: absolute;
+  opacity: 0.08; /* Slightly more visible for global effect */
+  color: #1DB954; /* Spotify green for shapes/notes */
+  animation-name: floatGlobal;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform, opacity; /* Performance hint */
+}
+
+.global-animated-background .musical-note {
+  font-size: clamp(1.5rem, 3vw, 2.5rem); /* Responsive font size for notes */
+}
+
+/* Different shapes - basic examples */
+.global-animated-background .shape.shape-0 { /* Circle */
+  width: clamp(15px, 3vw, 25px); height: clamp(15px, 3vw, 25px); border-radius: 50%; background-color: currentColor;
+}
+.global-animated-background .shape.shape-1 { /* Square */
+  width: clamp(12px, 2.5vw, 20px); height: clamp(12px, 2.5vw, 20px); background-color: currentColor; transform: rotate(45deg);
+}
+.global-animated-background .shape.shape-2 { /* Triangle - CSS triangle */
+  width: 0; height: 0; 
+  border-left: clamp(8px, 1.5vw, 12px) solid transparent;
+  border-right: clamp(8px, 1.5vw, 12px) solid transparent;
+  border-bottom: clamp(15px, 3vw, 22px) solid currentColor;
+}
+.global-animated-background .shape.shape-3 { /* Line */
+  width: clamp(25px, 5vw, 40px); height: clamp(1px, 0.3vw, 2px); background-color: currentColor;
+}
+.global-animated-background .shape.shape-4 { /* Small dot */
+  width: clamp(6px, 1.2vw, 10px); height: clamp(6px, 1.2vw, 10px); border-radius: 50%; background-color: currentColor;
+}
+
+@keyframes floatGlobal {
+  0% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 0.03;
+  }
+  50% {
+    opacity: 0.15; /* Max opacity during float */
+  }
+  100% {
+    transform: translateY(calc(var(--vh, 1vh) * -5)) rotate(180deg) scale(1.1); /* Use viewport height for translate */
+    opacity: 0.03;
+  }
+}
+
+/* Distribute and animate shapes and notes - using up to 40 elements */
+/* Using specific instance classes generated in GlobalAnimatedBackground.js for broader distribution */
+.global-animated-background > div {
+  /* common random start positions, animation delays and durations will be varied by nth-child */
+  top: calc(var(--i) * 2.5%); /* Distribute vertically (0 to 100%) */
+  left: calc(var(--j) * 2.5%); /* Distribute horizontally (0 to 100%) */
+  animation-duration: calc(10s + (var(--r) * 10s)); /* 10s to 20s */
+  animation-delay: calc(var(--r) * -10s);       /* Varying negative delays */
+  transform: scale(calc(0.7 + var(--r) * 0.6)); /* Scale from 0.7 to 1.3 */
+  opacity: calc(0.05 + var(--r) * 0.1); /* Vary initial opacity slightly */
+}
+
+/* Example to set --i, --j, --r for a few children for more variation */
+/* This would ideally be set per-child in JS for true randomness, 
+   but CSS can approximate with many nth-child rules or by varying a few */
+
+.global-animated-background > .shape-instance-0, .global-animated-background > .note-instance-0 { --i: 5; --j: 10; --r: 0.1; }
+.global-animated-background > .shape-instance-1, .global-animated-background > .note-instance-1 { --i: 15; --j: 80; --r: 0.2; }
+.global-animated-background > .shape-instance-2, .global-animated-background > .note-instance-2 { --i: 25; --j: 30; --r: 0.3; }
+.global-animated-background > .shape-instance-3, .global-animated-background > .note-instance-3 { --i: 35; --j: 90; --r: 0.4; }
+.global-animated-background > .shape-instance-4, .global-animated-background > .note-instance-4 { --i: 45; --j: 20; --r: 0.5; }
+.global-animated-background > .shape-instance-5, .global-animated-background > .note-instance-5 { --i: 55; --j: 70; --r: 0.6; }
+.global-animated-background > .shape-instance-6, .global-animated-background > .note-instance-6 { --i: 65; --j: 15; --r: 0.7; }
+.global-animated-background > .shape-instance-7, .global-animated-background > .note-instance-7 { --i: 75; --j: 60; --r: 0.8; }
+.global-animated-background > .shape-instance-8, .global-animated-background > .note-instance-8 { --i: 85; --j: 35; --r: 0.9; }
+.global-animated-background > .shape-instance-9, .global-animated-background > .note-instance-9 { --i: 95; --j: 50; --r: 0.15; }
+.global-animated-background > .shape-instance-10, .global-animated-background > .note-instance-10 { --i: 8; --j: 40; --r: 0.25; }
+.global-animated-background > .shape-instance-11, .global-animated-background > .note-instance-11 { --i: 18; --j: 5; --r: 0.35; }
+.global-animated-background > .shape-instance-12, .global-animated-background > .note-instance-12 { --i: 28; --j: 75; --r: 0.45; }
+.global-animated-background > .shape-instance-13, .global-animated-background > .note-instance-13 { --i: 38; --j: 25; --r: 0.55; }
+.global-animated-background > .shape-instance-14, .global-animated-background > .note-instance-14 { --i: 48; --j: 85; --r: 0.65; }
+.global-animated-background > .shape-instance-15 { --i: 58; --j: 10; --r: 0.75; }
+.global-animated-background > .shape-instance-16 { --i: 68; --j: 55; --r: 0.85; }
+.global-animated-background > .shape-instance-17 { --i: 78; --j: 30; --r: 0.95; }
+.global-animated-background > .shape-instance-18 { --i: 88; --j: 95; --r: 0.12; }
+.global-animated-background > .shape-instance-19 { --i: 98; --j: 20; --r: 0.22; }
+.global-animated-background > .shape-instance-20 { --i: 12; --j: 65; --r: 0.32; }
+.global-animated-background > .shape-instance-21 { --i: 22; --j: 45; --r: 0.42; }
+.global-animated-background > .shape-instance-22 { --i: 32; --j: 80; --r: 0.52; }
+.global-animated-background > .shape-instance-23 { --i: 42; --j: 15; --r: 0.62; }
+.global-animated-background > .shape-instance-24 { --i: 52; --j: 70; --r: 0.72; }
+.global-animated-background > .shape-instance-25 { --i: 62; --j: 5; --r: 0.82; }
+.global-animated-background > .shape-instance-26 { --i: 72; --j: 85; --r: 0.92; }
+.global-animated-background > .shape-instance-27 { --i: 82; --j: 25; --r: 0.18; }
+.global-animated-background > .shape-instance-28 { --i: 92; --j: 75; --r: 0.28; }
+.global-animated-background > .shape-instance-29 { --i: 2; --j: 55; --r: 0.38; }
+.global-animated-background > .shape-instance-30 { --i: 12; --j: 15; --r: 0.48; }
+.global-animated-background > .shape-instance-31 { --i: 22; --j: 95; --r: 0.58; }
+.global-animated-background > .shape-instance-32 { --i: 32; --j: 35; --r: 0.68; }
+.global-animated-background > .shape-instance-33 { --i: 42; --j: 65; --r: 0.78; }
+.global-animated-background > .shape-instance-34 { --i: 52; --j: 5; --r: 0.88; }
+.global-animated-background > .shape-instance-35 { --i: 62; --j: 80; --r: 0.98; }
+.global-animated-background > .shape-instance-36 { --i: 72; --j: 20; --r: 0.14; }
+.global-animated-background > .shape-instance-37 { --i: 82; --j: 70; --r: 0.24; }
+.global-animated-background > .shape-instance-38 { --i: 92; --j: 40; --r: 0.34; }
+.global-animated-background > .shape-instance-39 { --i: 7; --j: 60; --r: 0.44; }
+
+/* Ensure other page content has transparent background or is above the global background */
+body {
+  background-color: #000000; /* Fallback if global animated isn't full bleed or transparent */
+  /* The global-animated-background provides the main visual background now */
+}
+
+/* Example: Make recommendation page content have a semi-transparent overlay */
+.recommendation-page-content {
+  background-color: rgba(18, 18, 18, 0.6); /* Dark semi-transparent so global BG is visible */
+  position: relative;
+  z-index: 1;
+}
+
+/* Login and Signup page adjustments */
+.auth-page {
+  background-color: transparent; /* Ensure the page wrapper is transparent */
+  padding: 20px 0; /* Add some padding to center the auth-container vertically if needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center the auth-container on the page */
+  min-height: calc(100vh - 120px); /* Adjust based on nav/footer height to fill screen */
+}
+
+.auth-container { /* Updated from .auth-page-container */
+  background-color: rgba(29, 29, 29, 0.75); /* Slightly darker semi-transparent background */
+  padding: 30px 40px;
+  border-radius: 10px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px; /* Max width for the form container */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Global Cursor Styles for Typing Animation */
+.cursor {
+  display: inline-block;
+  animation: blinkCursor 0.7s infinite;
+  color: #1DB954; /* Spotify green, or choose a color that fits the header */
+  font-weight: bold; /* Or adjust as needed */
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Ensure body takes full height for transparent app structure to work well with global background */
+body, html {
+  height: 100%;
 }

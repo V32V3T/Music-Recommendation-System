@@ -1,27 +1,35 @@
 .landing-page {
-  padding: 20px;
-  max-width: 900px;
+  padding: 0; /* Remove padding if hero is full width */
+  max-width: 100%; /* Allow full width */
   margin: 0 auto;
-  color: #e0e0e0; /* Lighter text for readability on dark background */
+  color: #f0f0f0; /* Ensuring light text on black background */
+  /* background-color: #000; Optional: if you want to ensure landing page itself is black vs inheriting from body */
 }
 
 .landing-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 20px 20px;
-  background-color: rgba(29, 185, 84, 0.1); /* Subtle Spotify green background */
-  border-radius: 8px;
+  /* text-align: center;
+  margin-bottom: 50px; 
+  padding: 30px 20px; 
+  background-color: #111111; 
+  border-radius: 10px; 
+  border: 1px solid #222; */
+  display: none; /* Hide old header */
 }
 
 .landing-header h1 {
-  color: #1DB954; /* Spotify Green */
-  font-size: 2.5em;
-  margin-bottom: 8px;
+  color: #1DB954; /* Spotify Green - stands out on black */
+  font-size: 3.5em; /* Larger for impact */
+  font-weight: 700; /* Bolder Poppins */
+  margin-bottom: 10px;
+  line-height: 1.2;
+  text-shadow: 0 0 5px rgba(29, 185, 84, 0.3); /* Subtle green glow */
 }
 
 .subtitle {
-  font-size: 1.1em;
-  color: #b3b3b3;
+  font-size: 1.3em; /* Larger subtitle */
+  color: #b0b0b0; /* Lighter grey for subtitle */
+  font-weight: 300; /* Lighter Poppins */
+  letter-spacing: 0.5px; /* Slight letter spacing */
 }
 
 .landing-page section {
@@ -78,6 +86,10 @@
   margin-top: 30px;
   background-color: transparent !important; /* Override section default */
   box-shadow: none !important; /* Override section default */
+  padding: 20px; /* Add padding back here */
+  max-width: 900px; /* Restore max-width */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .get-started-button {
@@ -98,201 +110,533 @@
   transform: translateY(-2px);
 }
 
-/* Info Carousel Styles */
-.info-carousel {
+/* Visualizer Styles for Get Started Section */
+.visualizer-container {
   display: flex;
-  flex-wrap: nowrap; /* Ensure cards stay in a single row */
-  overflow-x: auto; /* Allow horizontal scrolling if cards overflow */
-  justify-content: center; /* Center the group of cards if they don't fill the width */
-  gap: 20px; /* Increased gap slightly for better separation */
-  margin-top: 20px;
-  margin-bottom: 40px; 
-  padding: 10px 0; /* Add some vertical padding, remove horizontal as scroll handles it */
-  /* Clear previous full-width styling for the carousel, let landing-page handle max-width */
+  justify-content: center; /* Center the bars */
+  align-items: flex-end; /* Bars grow upwards */
+  height: 50px; /* Height of the visualizer area */
+  margin-bottom: 20px; /* Space between visualizer and button */
+  gap: 4px; /* Space between bars */
 }
 
-/* Resetting some section properties for cards within the carousel */
-.info-carousel > .info-card {
-  margin-bottom: 0; 
+.visualizer-bar {
+  width: 6px; /* Width of each bar */
+  background-color: #1DB954; /* Spotify green */
+  border-radius: 2px; /* Slightly rounded tops */
+  animation-name: jump;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  /* Base height will be set by animation */
 }
 
-.info-card {
-  background-color: #3b3f46; 
-  padding: 15px; 
-  border-radius: 8px; 
-  box-shadow: 0 2px 5px rgba(0,0,0,0.25); 
-  flex-shrink: 0; /* Prevent cards from shrinking */
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; /* Center content (icon and title) horizontally */
-  justify-content: center; /* Center content (icon and title) vertically */
-  width: 180px; /* Adjusted width for icon + title */
-  min-height: 150px; /* Adjusted min-height for icon + title */
-  text-align: center; /* Center text within the card */
+@keyframes jump {
+  0%   { height: 5px; opacity: 0.7; }
+  25%  { height: 30px; opacity: 1; }
+  50%  { height: 15px; opacity: 0.8; }
+  75%  { height: 40px; opacity: 1; }
+  100% { height: 5px; opacity: 0.7; }
+}
+
+/* Apply varied animation delays and durations to each bar */
+.visualizer-bar:nth-child(1) {
+  animation-duration: 0.8s;
+  animation-delay: 0.1s;
+}
+.visualizer-bar:nth-child(2) {
+  animation-duration: 0.7s;
+  animation-delay: 0.3s;
+}
+.visualizer-bar:nth-child(3) {
+  animation-duration: 0.9s;
+  animation-delay: 0s;
+}
+.visualizer-bar:nth-child(4) {
+  animation-duration: 0.6s;
+  animation-delay: 0.2s;
+}
+.visualizer-bar:nth-child(5) {
+  animation-duration: 0.85s;
+  animation-delay: 0.4s;
+}
+.visualizer-bar:nth-child(6) {
+  animation-duration: 0.75s;
+  animation-delay: 0.15s;
+}
+.visualizer-bar:nth-child(7) {
+  animation-duration: 0.95s;
+  animation-delay: 0.25s;
+}
+
+/* Info Carousel Styles - now for actual carousel */
+.info-carousel {
+  display: flex; /* Keep flex for initial setup if needed, but items will be absolute */
+  /* flex-wrap: nowrap; No longer needed, items are absolute */
+  /* overflow-x: auto; No longer needed, overflow is hidden */
+  /* justify-content: center; Centering handled by item transforms */
+  gap: 0px; /* Gap controlled by transforms */
+  margin-top: 50px; /* Space above the carousel */
+  margin-bottom: 50px;
+  padding: 20px 0; 
+  /* max-width: 900px; Let it be wider if needed for carousel perspective */
+  width: 100%; /* Take full width available in its container */
+  margin-left: auto;
+  margin-right: auto;
+  perspective: 1000px; /* Add perspective for 3D effect */
+  position: relative; /* For positioning cards absolutely */
+  height: 350px; /* Define a height for the carousel area, adjust as needed */
+  /* min-height: 180px; */
+  overflow: hidden; /* Hide cards that are too far out */
+}
+
+/* New base class for info cards within the carousel */
+.info-card-carousel-item {
+  background-color: rgba(20, 20, 20, 0.85); /* Darker semi-transparent background */
+  padding: 20px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(29, 185, 84, 0.4); /* Neon green glow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically */
+  text-align: center;
+  border: 1px solid #1DB954; /* Neon green border */
+  color: #e0e0e0; /* Ensure text color is set */
+
+  /* Carousel item specific styles (similar to recommendation-card in carousel) */
+  width: 280px; /* Fixed width for carousel items, adjust as needed */
+  min-height: 200px; /* Ensure a minimum height for content */
+  flex-shrink: 0; 
+  position: absolute; 
+  left: 50%; 
+  top: 50%; 
+  transform: translate(-50%, -50%); 
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out, z-index 0s 0.25s; 
+  opacity: 1; 
+  cursor: pointer; 
+}
+
+.info-card-carousel-item .info-card-icon { 
+  font-size: 2.8em;
+  margin-bottom: 12px;
+  color: #1DB954;
+}
+
+.info-card-carousel-item h2 { 
+  font-size: 1.2em; /* Slightly larger for carousel card */
+  font-weight: 600;
+  color: #1DB954; /* Neon green title */
+  padding-bottom: 0;
+  margin-bottom: 10px; /* Add some margin if content follows */
+  border-bottom: none;
+  line-height: 1.3;
+}
+
+/* Remove or adapt old .info-card-placeholder styles if they are no longer needed
+   or if .info-card-carousel-item replaces them fully.
+   For now, commenting out to avoid conflicts.
+*/
+/*
+.info-card-placeholder {
+  background-color: #2a2e34; 
+  padding: 20px 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px; 
+  height: 140px; 
+  text-align: center;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  position: relative; 
+  border: 1px solid #383c44;
 }
 
-.info-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-  background-color: #4a4f56;
+.info-card-placeholder:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  background-color: #333840;
 }
 
-/* Styles for the icon in the default card state */
-.info-card-icon {
-  font-size: 2.5em; /* Adjust icon size as needed */
-  margin-bottom: 10px;
-  color: #1DB954; /* Spotify green or a contrasting color */
+.info-card-placeholder .info-card-icon { 
+  font-size: 2.8em;
+  margin-bottom: 12px;
+  color: #1DB954;
 }
 
-/* Hide detailed content in default card state */
-.info-card .card-content-wrapper {
-  display: none; 
-}
-
-.info-card h2 {
-  padding-bottom: 0; /* Remove padding */
-  margin-bottom: 0; /* Remove margin */
-  font-size: 1.1em; /* Adjusted for default card */
-  border-bottom: none; /* Remove border in default state */
+.info-card-placeholder h2 { 
+  font-size: 1em;
+  font-weight: 500;
+  color: #e0e0e0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
   line-height: 1.2;
 }
+*/
 
-.info-card.selected { /* This class is no longer used by JS, can be removed or repurposed */
-  /* transform: scale(1.05); */
-  /* box-shadow: 0 8px 16px rgba(0,0,0,0.3); */ 
-  /* border: 2px solid #1DB954; */
-  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
-} 
+/* The positional classes .card-center, .card-left1, .card-right1, .card-left2, .card-right2, .card-hidden
+   are expected to be defined in App.css and apply here as well.
+   If info cards need different transforms (e.g. due to different size/aspect ratio),
+   we might need to create variants like .info-card-carousel-item.card-center etc.
+*/
 
-/* Styles for the backdrop */
-.backdrop {
+/* Positional styles for Info Card Carousel items */
+/* Copied and adapted from App.css recommendation-card positional styles */
+.info-card-carousel-item.card-center {
+  transform: translate(-50%, -50%) scale(1.1);
+  z-index: 3;
+  opacity: 1;
+}
+
+.info-card-carousel-item.card-left1 {
+  transform: translate(-100%, -50%) translateX(-40px) rotateY(30deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.info-card-carousel-item.card-right1 {
+  transform: translate(0%, -50%) translateX(40px) rotateY(-30deg) scale(0.9);
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.info-card-carousel-item.card-left2 {
+  transform: translate(-150%, -50%) translateX(-80px) rotateY(45deg) scale(0.8);
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.info-card-carousel-item.card-right2 {
+  transform: translate(50%, -50%) translateX(80px) rotateY(-45deg) scale(0.8);
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.info-card-carousel-item.card-hidden {
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none; /* Make hidden cards unclickable */
+}
+
+/* Flip Modal Styles */
+.flip-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 999; /* Below zoomed card, above everything else */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* High z-index */
+  /* Add a subtle fade-in for the overlay itself */
+  animation: fadeInOverlay 0.3s ease-out forwards;
 }
 
-/* Styles for the zoomed card */
-.info-card.zoomed {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1); /* Initial state for animation */
-  width: 75vw; /* Large width */
-  max-width: 800px; /* Max width for very large screens */
-  height: auto; /* Auto height based on content */
-  min-height: auto; /* Reset min-height */
-  max-height: 85vh; /* Max height to prevent overflow */
-  padding: 25px; /* More padding when zoomed */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  z-index: 1000; /* Above backdrop */
-  cursor: default; /* No pointer cursor when zoomed */
-  overflow-y: auto; /* Allow scrolling for content longer than max-height */
-  animation: zoomIn 0.3s ease-out forwards;
-  text-align: left; /* Reset text-align for zoomed card content */
-  align-items: stretch; /* Reset alignment for zoomed card */
-  justify-content: flex-start; /* Reset justification for zoomed card */
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes zoomIn {
-  from {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-}
-
-.info-card.zoomed h2 {
-  font-size: 2em; /* Larger title when zoomed */
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #1DB954; /* Restore border for zoomed state */
-  text-align: left;
-}
-
-.info-card.zoomed .card-content-wrapper {
-  display: block; /* Show content when zoomed */
-  font-size: 1em; /* Normal font size when zoomed */
-  max-height: none; /* Allow full content height */
-  overflow-y: visible; /* Let parent handle scroll */
-}
-
-.info-card.zoomed .responsive-image {
-  max-width: 80%; /* Adjust image size in zoomed view */
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
-
-/* Close button for the zoomed card */
-.close-button {
+.flip-modal-backdrop {
   position: absolute;
-  top: 10px;
-  right: 15px;
-  background: #555;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Darker backdrop */
+  cursor: pointer;
+}
+
+.flip-modal-card-wrapper {
+  position: relative; /* For close button and card positioning */
+  width: 70vw; /* Large zoomed card width */
+  max-width: 700px;
+  height: 80vh; /* Large zoomed card height */
+  max-height: 550px;
+  perspective: 1500px; /* Perspective for the 3D flip */
+  cursor: pointer; /* To indicate the card itself is clickable for flipping */
+  z-index: 1001;
+}
+
+.flip-modal-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* Slower, smoother flip */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.flip-modal-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-modal-card-front,
+.flip-modal-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+.flip-modal-card-front {
+  background-color: #282c34; /* Dark front */
+  color: #f0f0f0;
+  align-items: center; /* Center content on front */
+  justify-content: center;
+  text-align: center;
+}
+
+.flip-modal-card-front .info-card-icon.modal-icon {
+  font-size: 4em;
+  margin-bottom: 20px;
+  color: #1DB954;
+}
+
+.flip-modal-card-front h2 {
+  font-size: 2em;
+  font-weight: 600;
+  color: #1DB954;
+  margin-bottom: 10px;
+}
+
+.flip-modal-card-front .click-to-reveal {
+  font-size: 0.9em;
+  color: #a0a0a0;
+}
+
+.flip-modal-card-back {
+  background-color: #30353d; /* Slightly lighter back for depth */
+  color: #e0e0e0;
+  transform: rotateY(180deg);
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: auto; /* Scroll for content on the back */
+}
+
+.flip-modal-card-back h3 { /* Title on the back */
+  font-size: 1.8em;
+  color: #1DB954;
+  margin-bottom: 15px;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.flip-modal-card-back .card-content-wrapper {
+  display: block;
+  font-size: 1em; /* Readable font size for back content */
+  width: 100%;
+  line-height: 1.6;
+}
+
+.flip-modal-close-button {
+  position: absolute;
+  top: -15px; /* Position outside the card slightly */
+  right: -15px;
+  background: #e63946; /* Red close button */
   color: white;
-  border: none;
+  border: 2px solid white; /* White border for visibility */
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 1.2em;
+  width: 35px;
+  height: 35px;
+  font-size: 1.3em;
   font-weight: bold;
-  line-height: 28px; /* Center X */
+  line-height: 31px; /* Adjust for border */
   text-align: center;
   cursor: pointer;
-  z-index: 1001; /* Above card content */
-  transition: background-color 0.2s ease;
+  z-index: 1002; /* Above the card */
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.close-button:hover {
-  background: #e63946; /* A reddish color for hover */
+.flip-modal-close-button:hover {
+  background-color: #d02a37;
+  transform: scale(1.1);
 }
 
-.landing-page.zoomed-active {
-  overflow: hidden; /* Prevent body scroll when a card is zoomed */
+.landing-page.modal-active {
+  /* overflow: hidden; -- Usually good, but can cause layout shifts if scrollbar disappears.
+     Consider if content behind modal is scrollable and if this is desired. */
 }
 
-/* Ensure icon is hidden when card is zoomed */
-.info-card.zoomed .info-card-icon {
-  display: none;
+/* Remove/cleanup old .info-card, .info-card-container, .info-card-front/back styles */
+/* These were for the in-place flip and are now replaced by placeholder & modal styles */
+.info-card-container { /* Old container */
+  /* perspective: 1000px; */
+  /* width: 220px; */
+  /* height: 220px; */
+  /* cursor: pointer; */
+}
+.info-card { /* Old main card that flipped in place */
+  /* ... (many styles to remove/comment out) ... */
+}
+.info-card-front, .info-card-back { /* Old faces, non-modal */
+  /* ... (many styles to remove/comment out) ... */
 }
 
-/* Adjustments for smaller screens if needed */
+/* Hero Section Styles */
+.hero-section {
+  position: relative;
+  height: 80vh; /* Adjust height as needed, viewport height */
+  min-height: 400px;
+  /* background: linear-gradient(135deg, #0a0a0a 0%, #1f1f1f 100%); */ /* Dark gradient - REMOVE IF GLOBAL BG IS ENOUGH */
+  background-color: transparent; /* Rely on global background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: visible; /* Allow content to be seen, global background handles its own overflow */
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1; /* Ensure hero content is above global background but below modals etc. */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2; /* Above hero-section if it had its own bg, now just above shapes if any were local */
+  padding: 30px 40px; /* Increased padding for a slightly larger box */
+  /* background-color: rgba(0,0,0,0.4); Remove background color */
+  background-color: transparent;
+  border-radius: 15px; /* Slightly larger radius */
+  animation: pulseNeonBox 2s infinite ease-in-out; /* Apply the new animation */
+  /* Initial neon box shadow state (part of the animation's 0% or base state) */
+  box-shadow:
+    0 0 5px #1DB954,
+    0 0 10px #1DB954,
+    0 0 15px #1DB954,
+    0 0 20px #1aa34a,
+    0 0 30px #1aa34a;
+  /* Add a subtle border to define the box even when glow is minimal */
+  border: 1px solid rgba(29, 185, 84, 0.3); 
+}
+
+/* Keyframes for the pulsing neon box effect */
+@keyframes pulseNeonBox {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 5px #1DB954,
+      0 0 10px #1DB954,
+      0 0 15px #1DB954,
+      0 0 20px #1aa34a,
+      0 0 30px #1aa34a,
+      0 0 35px #1aa34a;
+    border-color: rgba(29, 185, 84, 0.3);
+  }
+  50% {
+    transform: scale(1.02); /* Slightly larger */
+    box-shadow:
+      0 0 10px #1DB954,
+      0 0 20px #1DB954,
+      0 0 30px #1DB954,
+      0 0 40px #1aa34a, /* Brighter green */
+      0 0 50px #1aa34a,
+      0 0 60px #1aa34a;
+    border-color: rgba(29, 185, 84, 0.6); /* Border brightens slightly */
+  }
+}
+
+.neon-text-main {
+  font-family: 'Poppins', sans-serif; /* Or a more display/neon-friendly font */
+  font-size: 4rem; /* Large text */
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  /* Neon effect using text-shadow */
+  text-shadow:
+    0 0 5px #1DB954,
+    0 0 10px #1DB954,
+    0 0 20px #1DB954,
+    0 0 40px #1aa34a,
+    0 0 80px #1aa34a,
+    0 0 90px #1aa34a,
+    0 0 100px #1aa34a,
+    0 0 150px #1aa34a;
+  animation: flickerNeon 1.5s infinite alternate; /* Optional flicker animation */
+}
+
+@keyframes flickerNeon {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0 4px #1DB954,
+      0 0 11px #1DB954,
+      0 0 19px #1DB954,
+      0 0 40px #1aa34a,
+      0 0 80px #1aa34a,
+      0 0 90px #1aa34a,
+      0 0 100px #1aa34a,
+      0 0 140px #1aa34a;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+
+.typed-text {
+  font-size: 1.5rem;
+  color: #e0e0e0;
+  margin-bottom: 25px;
+  min-height: 2.2rem; /* To prevent layout shift */
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  font-weight: 300;
+}
+
 @media (max-width: 768px) {
-  .info-carousel {
-    gap: 15px; 
+  .info-card-placeholder {
+    width: 130px;
+    height: 110px;
   }
-  .info-card {
-    width: 140px; 
-    min-height: 120px;
+  .info-card-placeholder .info-card-icon {
+    font-size: 2.2em;
+    margin-bottom: 8px;
   }
-  .info-card-icon {
-    font-size: 2em;
-  }
-  .info-card h2 {
-    font-size: 1em; 
-  }
-  .info-card .card-content-wrapper {
-    font-size: 0.85em; /* Adjusted */
-    max-height: 80px; /* Adjusted */
-  }
-  .info-card.zoomed {
-    width: 90vw;
-    max-height: 90vh;
-  }
-  .info-card.zoomed h2 {
-    font-size: 1.5em;
-  }
-  .info-card.zoomed .card-content-wrapper {
+  .info-card-placeholder h2 {
     font-size: 0.9em;
+  }
+
+  .flip-modal-card-wrapper {
+    width: 90vw;
+    height: 75vh;
+    max-height: 500px;
+  }
+  .flip-modal-card-front h2 {
+    font-size: 1.6em;
+  }
+  .flip-modal-card-front .info-card-icon.modal-icon {
+    font-size: 3em;
+  }
+  .flip-modal-card-back h3 {
+    font-size: 1.4em;
+  }
+  .flip-modal-card-back .card-content-wrapper {
+    font-size: 0.9em;
+  }
+  .flip-modal-close-button {
+    width: 30px;
+    height: 30px;
+    line-height: 26px;
+    font-size: 1.1em;
+    top: -10px;
+    right: -10px;
   }
 } 

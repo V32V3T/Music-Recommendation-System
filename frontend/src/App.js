@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import RecommendationPage from './components/RecommendationPage';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
+import GlobalAnimatedBackground from './components/GlobalAnimatedBackground';
 import { AuthContext } from './context/AuthContext';
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <div className="App">
+      <GlobalAnimatedBackground />
       <nav className="app-nav">
         {user && location.pathname === '/recommendations' && (
           <Link to="/" className="nav-link-home">Home (Landing)</Link>
