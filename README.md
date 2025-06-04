@@ -424,4 +424,3 @@ All user-facing API endpoints are prefixed with `/api`.
 
 ---
 
-This README should provide a good starting point for understanding and presenting your project. Remember to replace `<repository_url>` if you include the cloning step. 
