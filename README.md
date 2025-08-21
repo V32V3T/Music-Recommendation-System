@@ -157,7 +157,7 @@ Music-Recommendation-System/
     *   You can add `-d` to run in detached mode (in the background): `docker-compose up --build -d`
 
 4.  **Accessing the Application:**
-    *   **Frontend:** Open your web browser and navigate to `http://localhost:3000`
+    *   **Frontend:** Open your web browser and navigate to `http://localhost:3002`
     *   **Backend API (for testing/docs):** The API will be running at `http://localhost:8000`. You can access the auto-generated FastAPI documentation at `http://localhost:8000/docs`.
 
 5.  **Stopping the Application:**
@@ -368,7 +368,7 @@ sequenceDiagram
         *   Sets the `DATABASE_URL` environment variable for the backend to connect to the PostgreSQL database.
     *   **`frontend` service:**
         *   Builds from `frontend/Dockerfile`.
-        *   Maps port `80` (container - Nginx default) to `3000` (host).
+        *   Maps port `80` (container - Nginx default) to `3002` (host).
         *   Mounts `./frontend/src:/app/src` as a volume (useful if the Dockerfile supports dev mode, otherwise primarily for build context).
         *   Depends on the `backend` service (ensures backend starts before frontend, though not strictly necessary for API calls as frontend handles API availability).
     *   **`db` service:**

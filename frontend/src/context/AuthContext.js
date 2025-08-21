@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 
-const API_BASE_URL = 'http://localhost:8000/api'; // Backend API for auth
+import { API_AUTH_URL } from './config';
+
+const API_BASE_URL = API_AUTH_URL; // Backend API for auth
 
 export const AuthContext = createContext(null);
 

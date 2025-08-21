@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import '../App.css'; // We can still use some global styles
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../config';
 
 const recommendationPageHeaderTexts = [
   "Discover Your Next Vibe...",

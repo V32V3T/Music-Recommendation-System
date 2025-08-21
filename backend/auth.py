@@ -5,13 +5,14 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
+import os
 
 import models
 import schemas
 import database
 
 # Configuration (better to move to a config file or env vars for production)
-SECRET_KEY = "YOUR_VERY_SECRET_KEY" # CHANGE THIS!
+SECRET_KEY = os.getenv("SECRET_KEY", "YOUR_VERY_SECRET_KEY") # Use environment variable
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

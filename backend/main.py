@@ -18,13 +18,19 @@ import database
 
 # Create database tables if they don't exist (for development only)
 # For production, use Alembic for migrations
-models.Base.metadata.create_all(bind=database.engine)
+# Only create tables if DATABASE_URL is set (avoid during build)
+if os.getenv("DATABASE_URL"):
+    try:
+        models.Base.metadata.create_all(bind=database.engine)
+    except Exception as e:
+        print(f"Database connection failed during startup: {e}")
+        print("This is normal during build process. Tables will be created when database is available.")
 
 app = FastAPI()
 
 # --- CORS Configuration ---
 origins = [
-    "http://localhost:3000",  # Allow your React frontend
+    "http://localhost:3002",  # Allow your React frontend
     # You can add other origins here if needed, e.g., your deployed frontend URL
 ]
 
