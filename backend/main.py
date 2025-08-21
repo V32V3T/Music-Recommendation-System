@@ -31,6 +31,7 @@ app = FastAPI()
 # --- CORS Configuration ---
 origins = [
     "http://localhost:3002",  # Allow your React frontend
+    "https://delightful-bublanina-bdfc0d.netlify.app",  # Your specific Netlify domain
     "https://*.netlify.app",  # Allow all Netlify domains
     "https://*.onrender.com",  # Allow all Render domains
     # You can add other origins here if needed, e.g., your deployed frontend URL
